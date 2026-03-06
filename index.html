@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>README Forge — GitHub README Generator</title>
+    <meta name="description"
+        content="Generate beautiful, professional GitHub profile README files instantly with live preview, templates, badges, and GitHub stats." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <!-- marked.js for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Sortable.js for drag-and-drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+    <!-- ══════ HEADER ══════ -->
+    <header class="site-header" role="banner">
+        <div class="header-inner">
+            <div class="brand">
+                <svg class="brand-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z" fill="var(--accent-primary)" />
+                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="var(--accent-primary)" stroke-width="2" fill="none"
+                        stroke-linecap="round" />
+                </svg>
+                <span class="brand-name">README <span class="brand-accent">Forge</span></span>
+            </div>
+
+            <nav class="header-actions" aria-label="Primary actions">
+                <label class="sr-only" for="template-select">Template</label>
+                <div class="select-wrapper">
+                    <select id="template-select" aria-label="Select template">
+                        <option value="advanced">🚀 Advanced</option>
+                        <option value="developer">🧑‍💻 Developer</option>
+                        <option value="minimal">✨ Minimal</option>
+                        <option value="creative">🎨 Creative</option>
+                    </select>
+                </div>
+
+                <button id="theme-toggle" class="btn btn-icon" aria-label="Toggle theme" title="Toggle theme"
+                    type="button">
+                    <svg id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="pointer-events:none">
+                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                    </svg>
+                    <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="display:none;pointer-events:none">
+                        <circle cx="12" cy="12" r="5" />
+                        <line x1="12" y1="1" x2="12" y2="3" />
+                        <line x1="12" y1="21" x2="12" y2="23" />
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                        <line x1="1" y1="12" x2="3" y2="12" />
+                        <line x1="21" y1="12" x2="23" y2="12" />
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                    </svg>
+                </button>
+
+                <button id="btn-copy" class="btn btn-secondary" aria-label="Copy markdown" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="pointer-events:none">
+                        <rect x="9" y="9" width="13" height="13" rx="2" />
+                        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                    </svg>
+                    Copy MD
+                </button>
+
+                <button id="btn-download" class="btn btn-primary" aria-label="Download README.md" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="pointer-events:none">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Download
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ══════ WORKSPACE ══════ -->
+    <main class="workspace" role="main">
+
+        <!-- LEFT PANEL: Form -->
+        <aside class="panel panel-form" id="panel-form" aria-label="README configuration">
+
+            <nav class="tab-bar" role="tablist" aria-label="Form sections">
+                <button class="tab active" role="tab" aria-selected="true" data-tab="profile"
+                    type="button">Profile</button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="advanced" type="button">Advanced</button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="skills" type="button">Skills</button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="projects" type="button">Projects</button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="badges" type="button">Badges</button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="social" type="button">Social</button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="sections" type="button">Sections</button>
+            </nav>
+
+            <!-- ── TAB: Profile ── -->
+            <section class="tab-panel active" id="tab-profile" aria-label="Profile settings">
+                <div class="form-group">
+                    <label for="f-name">Display Name</label>
+                    <input type="text" id="f-name" placeholder="e.g. Vicky Raj" autocomplete="name" />
+                </div>
+                <div class="form-group">
+                    <label for="f-username">GitHub Username</label>
+                    <div class="input-prefix">
+                        <span class="prefix">github.com/</span>
+                        <input type="text" id="f-username" placeholder="your-username" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="f-tagline">Role / Tagline</label>
+                    <input type="text" id="f-tagline" placeholder="e.g. Data Analyst | ML Learner | Web Dev" />
+                </div>
+                <div class="form-group">
+                    <label for="f-bio">About Project <span class="hint-inline">(bullet points or short
+                            paragraph)</span></label>
+                    <textarea id="f-bio" rows="3" placeholder="🔍 I turn raw data into decisions..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="f-location">Location</label>
+                    <input type="text" id="f-location" placeholder="e.g. Bihar, India 🇮🇳" />
+                </div>
+                <div class="form-group">
+                    <label for="f-email">Contact Email</label>
+                    <input type="email" id="f-email" placeholder="you@example.com" />
+                </div>
+                <div class="form-group">
+                    <label for="f-website">Portfolio / Website</label>
+                    <input type="url" id="f-website" placeholder="https://yoursite.com" />
+                </div>
+                <div class="form-group">
+                    <label for="f-version">Project Version Badge <span class="hint-inline">e.g. v2.0.0</span></label>
+                    <input type="text" id="f-version" placeholder="v1.0.0" />
+                </div>
+                <div class="form-group">
+                    <label for="f-motto">Motto / Quote</label>
+                    <input type="text" id="f-motto" placeholder="Building insights. Creating impact." />
+                </div>
+                <div class="form-group">
+                    <label for="f-status">Status</label>
+                    <input type="text" id="f-status" placeholder="Open to Collaborations & Internships" />
+                </div>
+                <div class="form-group">
+                    <label for="f-focus">Focus Areas</label>
+                    <input type="text" id="f-focus" placeholder="Data Analytics, Machine Learning, AI Integration" />
+                </div>
+                <div class="form-group">
+                    <label for="f-team">Team / Org</label>
+                    <input type="text" id="f-team" placeholder="e.g. Cosmic Shakti ✨" />
+                </div>
+
+                <!-- GitHub Stats -->
+                <!-- ── GitHub Stats Options ── -->
+                <div class="card-section options-section">
+                    <div class="options-section-header">
+                        <span class="options-section-icon">📊</span>
+                        <h3 class="options-section-title">GitHub Stats</h3>
+                    </div>
+
+                    <div class="slide-toggle-list">
+                        <label class="slide-toggle" for="f-show-stats">
+                            <div class="slide-toggle-info">
+                                <span class="slide-toggle-icon">📈</span>
+                                <span class="slide-toggle-label">Stats Card</span>
+                            </div>
+                            <input type="checkbox" id="f-show-stats" checked />
+                            <span class="slide-switch"></span>
+                        </label>
+
+                        <label class="slide-toggle" for="f-show-streak">
+                            <div class="slide-toggle-info">
+                                <span class="slide-toggle-icon">🔥</span>
+                                <span class="slide-toggle-label">Streak Stats</span>
+                            </div>
+                            <input type="checkbox" id="f-show-streak" checked />
+                            <span class="slide-switch"></span>
+                        </label>
+
+                        <label class="slide-toggle" for="f-show-langs">
+                            <div class="slide-toggle-info">
+                                <span class="slide-toggle-icon">🗂️</span>
+                                <span class="slide-toggle-label">Top Languages</span>
+                            </div>
+                            <input type="checkbox" id="f-show-langs" checked />
+                            <span class="slide-switch"></span>
+                        </label>
+
+                        <label class="slide-toggle" for="f-show-trophies">
+                            <div class="slide-toggle-info">
+                                <span class="slide-toggle-icon">🏆</span>
+                                <span class="slide-toggle-label">GitHub Trophies</span>
+                            </div>
+                            <input type="checkbox" id="f-show-trophies" />
+                            <span class="slide-switch"></span>
+                        </label>
+
+                        <label class="slide-toggle" for="f-show-activity">
+                            <div class="slide-toggle-info">
+                                <span class="slide-toggle-icon">📉</span>
+                                <span class="slide-toggle-label">Activity Graph</span>
+                            </div>
+                            <input type="checkbox" id="f-show-activity" />
+                            <span class="slide-switch"></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group" style="margin-top:16px;margin-bottom:0">
+                        <label for="f-stats-theme" style="display:flex;align-items:center;gap:6px">
+                            <span>🎨</span> Stats Theme
+                        </label>
+                        <select id="f-stats-theme">
+                            <option value="tokyonight">🌃 Tokyo Night</option>
+                            <option value="radical">🌈 Radical</option>
+                            <option value="merko">🌿 Merko</option>
+                            <option value="gruvbox">🪵 Gruvbox</option>
+                            <option value="onedark">🌑 One Dark</option>
+                            <option value="synthwave">🌊 Synthwave</option>
+                            <option value="monokai">🎸 Monokai</option>
+                            <option value="default">☀️ Default (Light)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- ── Profile Options ── -->
+                <div class="card-section options-section">
+                    <div class="options-section-header">
+                        <span class="options-section-icon">⚙️</span>
+                        <h3 class="options-section-title">Profile Options</h3>
+                    </div>
+
+                    <div class="slide-toggle-list">
+                        <label class="slide-toggle" for="f-typing">
+                            <div class="slide-toggle-info">
+                                <span class="slide-toggle-icon">⌨️</span>
+                                <span class="slide-toggle-label">Typing Animation</span>
+                            </div>
+                            <input type="checkbox" id="f-typing" checked />
+                            <span class="slide-switch"></span>
+                        </label>
+
+                        <label class="slide-toggle" for="f-yaml-about">
+                            <div class="slide-toggle-info">
+                                <span class="slide-toggle-icon">📋</span>
+                                <span class="slide-toggle-label">YAML About Card</span>
+                            </div>
+                            <input type="checkbox" id="f-yaml-about" checked />
+                            <span class="slide-switch"></span>
+                        </label>
+
+                        <label class="slide-toggle" for="f-skill-icons">
+                            <div class="slide-toggle-info">
+                                <span class="slide-toggle-icon">🧩</span>
+                                <span class="slide-toggle-label">Skill Icons</span>
+                            </div>
+                            <input type="checkbox" id="f-skill-icons" checked />
+                            <span class="slide-switch"></span>
+                        </label>
+
+                        <label class="slide-toggle" for="f-wave">
+                            <div class="slide-toggle-info">
+                                <span class="slide-toggle-icon">👋</span>
+                                <span class="slide-toggle-label">Wave Greeting</span>
+                            </div>
+                            <input type="checkbox" id="f-wave" checked />
+                            <span class="slide-switch"></span>
+                        </label>
+
+                        <label class="slide-toggle" for="f-banner">
+                            <div class="slide-toggle-info">
+                                <span class="slide-toggle-icon">🎆</span>
+                                <span class="slide-toggle-label">Animated Banner</span>
+                            </div>
+                            <input type="checkbox" id="f-banner" checked />
+                            <span class="slide-switch"></span>
+                        </label>
+
+                        <label class="slide-toggle" for="f-visitor-badge">
+                            <div class="slide-toggle-info">
+                                <span class="slide-toggle-icon">👁️</span>
+                                <span class="slide-toggle-label">Visitor Badge</span>
+                            </div>
+                            <input type="checkbox" id="f-visitor-badge" />
+                            <span class="slide-switch"></span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── TAB: Advanced ── -->
+            <section class="tab-panel" id="tab-advanced" aria-label="Advanced settings">
+                <p class="hint">Configure animated banner, typing lines, and more for the Advanced template.</p>
+
+                <div class="card-section">
+                    <h3 class="card-section-title">Animated Banner</h3>
+                    <div class="form-group mt-8">
+                        <label for="f-banner-text">Banner Title</label>
+                        <input type="text" id="f-banner-text" placeholder="YOUR NAME" />
+                    </div>
+                    <div class="form-group">
+                        <label for="f-banner-desc">Banner Subtitle</label>
+                        <input type="text" id="f-banner-desc" placeholder="Data Analyst | ML Learner | Web Dev" />
+                    </div>
+                    <div class="form-group">
+                        <label for="f-banner-color">Banner Gradient <span class="hint-inline">CSS gradient
+                                stops</span></label>
+                        <select id="f-banner-color">
+                            <option value="0:6a0dad,50:9b30ff,100:00d4ff">Purple → Cyan</option>
+                            <option value="0:0f0c29,50:302b63,100:24243e">Dark Purple</option>
+                            <option value="0:0052D4,50:4364F7,100:6FB1FC">Blue Gradient</option>
+                            <option value="0:f953c6,50:b91d73,100:6a0dad">Pink → Purple</option>
+                            <option value="0:11998e,50:38ef7d,100:11998e">Emerald</option>
+                            <option value="0:f7971e,50:ffd200,100:f7971e">Amber</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card-section">
+                    <h3 class="card-section-title">Typing Animation Lines</h3>
+                    <p class="hint">Semicolon-separated lines (e.g. <em>Turning Data Into Insights;Building AI
+                            Apps</em>)</p>
+                    <div class="form-group">
+                        <label for="f-typing-lines">Lines</label>
+                        <textarea id="f-typing-lines" rows="4"
+                            placeholder="Turning Data Into Insights;Building AI Apps;Open Source Contributor"></textarea>
+                    </div>
+                </div>
+
+                <div class="card-section">
+                    <h3 class="card-section-title">About Me — Coding GIF</h3>
+                    <p class="hint">Pick the GIF shown beside your about section. Click one to select.</p>
+                    <div class="gif-picker" id="gif-picker">
+                        <button type="button" class="gif-option active" data-gif-idx="0" title="Typing at desk">
+                            <img src="https://media.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif" alt="GIF 1"
+                                loading="lazy" />
+                        </button>
+                        <button type="button" class="gif-option" data-gif-idx="1" title="Neon coder">
+                            <img src="https://media.giphy.com/media/L1R1tvI9svkIWwpVYr/giphy.gif" alt="GIF 2"
+                                loading="lazy" />
+                        </button>
+                        <button type="button" class="gif-option" data-gif-idx="2" title="Pacman">
+                            <img src="https://media.giphy.com/media/ZVik7pBtu9dNS/giphy.gif" alt="GIF 3"
+                                loading="lazy" />
+                        </button>
+                        <button type="button" class="gif-option" data-gif-idx="3" title="Coding cat">
+                            <img src="https://media.giphy.com/media/13HgwGsXF0aiGY/giphy.gif" alt="GIF 4"
+                                loading="lazy" />
+                        </button>
+                        <button type="button" class="gif-option" data-gif-idx="4" title="Robot coding">
+                            <img src="https://media.giphy.com/media/RbDKaczqWovIugyJmW/giphy.gif" alt="GIF 5"
+                                loading="lazy" />
+                        </button>
+                        <button type="button" class="gif-option" data-gif-idx="5" title="Code falling">
+                            <img src="https://media.giphy.com/media/M9gbBd9nbDrOTu1Mqx/giphy.gif" alt="GIF 6"
+                                loading="lazy" />
+                        </button>
+                        <button type="button" class="gif-option" data-gif-idx="6" title="Space coder">
+                            <img src="https://media.giphy.com/media/coxQHKASG60HrHtvkt/giphy.gif" alt="GIF 7"
+                                loading="lazy" />
+                        </button>
+                        <button type="button" class="gif-option" data-gif-idx="7" title="Matrix wave">
+                            <img src="https://media.giphy.com/media/KAq5w47R9rmTuxXUOs/giphy.gif" alt="GIF 8"
+                                loading="lazy" />
+                        </button>
+                    </div>
+                    <input type="hidden" id="f-gif-idx" value="0" />
+                </div>
+            </section>
+
+            <!-- ── TAB: Skills ── -->
+            <section class="tab-panel" id="tab-skills" aria-label="Skills settings">
+                <p class="hint">Each skill auto-generates a badge. Toggle "Skill Icons" in Profile to use skillicons.dev
+                    icons.</p>
+
+                <div class="skills-grid" id="skills-grid"></div>
+
+                <div class="skill-adder">
+                    <label for="skill-input" class="sr-only">Skill name</label>
+                    <input type="text" id="skill-input" placeholder="e.g. Power BI, HuggingFace, Streamlit..." />
+                    <button id="btn-add-skill" class="btn btn-primary btn-sm" type="button">+ Add</button>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="card-section">
+                    <h3 class="card-section-title">Quick Add</h3>
+                    <div class="quick-skills" id="quick-skills"></div>
+                </div>
+            </section>
+
+            <!-- ── TAB: Projects ── -->
+            <section class="tab-panel" id="tab-projects" aria-label="Projects settings">
+                <p class="hint">Add up to 3 projects for a table layout (Advanced template) or card layout (other
+                    templates).</p>
+                <div id="projects-list"></div>
+                <button id="btn-add-project" class="btn btn-outline btn-full" type="button">+ Add Project</button>
+            </section>
+
+            <!-- ── TAB: Badges ── -->
+            <section class="tab-panel" id="tab-badges" aria-label="Badge builder">
+                <p class="hint">Build custom shields.io badges and add them to your README.</p>
+
+                <div class="form-group">
+                    <label for="badge-label">Label (left)</label>
+                    <input type="text" id="badge-label" placeholder="e.g. Open Source" />
+                </div>
+                <div class="form-group">
+                    <label for="badge-message">Message (right)</label>
+                    <input type="text" id="badge-message" placeholder="e.g. ♥ Contributor" />
+                </div>
+                <div class="form-group">
+                    <label for="badge-color">Color</label>
+                    <div class="badge-color-row">
+                        <input type="color" id="badge-color-picker" value="#6e40c9" />
+                        <input type="text" id="badge-color" placeholder="blueviolet or #6e40c9" value="blueviolet" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="badge-style">Style</label>
+                    <select id="badge-style">
+                        <option value="for-the-badge">For the Badge</option>
+                        <option value="flat">Flat</option>
+                        <option value="flat-square">Flat Square</option>
+                        <option value="plastic">Plastic</option>
+                        <option value="social">Social</option>
+                    </select>
+                </div>
+                <div class="badge-preview-row">
+                    <img id="badge-preview-img" src="" alt="Badge preview" />
+                    <button id="btn-add-badge" class="btn btn-primary btn-sm" type="button">Add to README</button>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="card-section">
+                    <h3 class="card-section-title">Added Badges</h3>
+                    <div id="badge-list" class="badge-list"></div>
+                </div>
+            </section>
+
+            <!-- ── TAB: Social ── -->
+            <section class="tab-panel" id="tab-social" aria-label="Social links">
+                <p class="hint">Social links displayed as clickable badges in your README.</p>
+
+                <div class="form-group">
+                    <label for="s-github">GitHub Username</label>
+                    <div class="input-prefix"><span class="prefix">github.com/</span><input type="text" id="s-github"
+                            placeholder="username" /></div>
+                </div>
+                <div class="form-group">
+                    <label for="s-linkedin">LinkedIn</label>
+                    <div class="input-prefix"><span class="prefix">in/</span><input type="text" id="s-linkedin"
+                            placeholder="your-profile" /></div>
+                </div>
+                <div class="form-group">
+                    <label for="s-instagram">Instagram</label>
+                    <div class="input-prefix"><span class="prefix">@</span><input type="text" id="s-instagram"
+                            placeholder="handle" /></div>
+                </div>
+                <div class="form-group">
+                    <label for="s-twitter">Twitter / X</label>
+                    <div class="input-prefix"><span class="prefix">@</span><input type="text" id="s-twitter"
+                            placeholder="handle" /></div>
+                </div>
+                <div class="form-group">
+                    <label for="s-youtube">YouTube</label>
+                    <div class="input-prefix"><span class="prefix">@</span><input type="text" id="s-youtube"
+                            placeholder="channel" /></div>
+                </div>
+                <div class="form-group">
+                    <label for="s-dev">Dev.to</label>
+                    <div class="input-prefix"><span class="prefix">dev.to/</span><input type="text" id="s-dev"
+                            placeholder="username" /></div>
+                </div>
+                <div class="form-group">
+                    <label for="s-medium">Medium</label>
+                    <div class="input-prefix"><span class="prefix">@</span><input type="text" id="s-medium"
+                            placeholder="username" /></div>
+                </div>
+                <div class="form-group">
+                    <label for="s-discord">Discord Server Invite</label>
+                    <input type="text" id="s-discord" placeholder="https://discord.gg/..." />
+                </div>
+                <div class="form-group">
+                    <label for="s-buymeacoffee">Buy Me a Coffee</label>
+                    <div class="input-prefix"><span class="prefix">buymeacoffee.com/</span><input type="text"
+                            id="s-buymeacoffee" placeholder="username" /></div>
+                </div>
+            </section>
+
+            <!-- ── TAB: Sections ── -->
+            <section class="tab-panel" id="tab-sections" aria-label="Section order">
+                <p class="hint">Drag to reorder sections. Toggle to show/hide.</p>
+                <ul id="sections-sortable" class="sections-list" aria-label="README sections"></ul>
+            </section>
+
+        </aside>
+
+        <!-- RIGHT PANEL: Preview -->
+        <section class="panel panel-preview" aria-label="Live README preview">
+            <header class="preview-header">
+                <div class="preview-tabs">
+                    <button class="preview-tab active" id="ptab-preview" aria-selected="true"
+                        type="button">Preview</button>
+                    <button class="preview-tab" id="ptab-raw" aria-selected="false" type="button">Raw Markdown</button>
+                </div>
+                <div class="preview-actions">
+                    <button id="btn-reset" class="btn btn-ghost btn-sm" aria-label="Reset form"
+                        type="button">Reset</button>
+                </div>
+            </header>
+
+            <div class="preview-body" id="preview-body">
+                <article id="preview-render" class="markdown-body" aria-live="polite" aria-label="README preview">
+                </article>
+            </div>
+
+            <div class="preview-body hidden" id="raw-body">
+                <pre><code id="raw-code" class="language-markdown"></code></pre>
+                <button id="btn-copy-raw" class="btn btn-ghost btn-sm copy-raw-btn" type="button">Copy Raw</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- JS MODULES -->
+    <script src="js/SectionManager.js"></script>
+    <script src="js/BadgeBuilder.js"></script>
+    <script src="js/TemplateEngine.js"></script>
+    <script src="js/PreviewRenderer.js"></script>
+    <script src="js/ExportManager.js"></script>
+    <script src="js/FormManager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
