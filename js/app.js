@@ -9,6 +9,7 @@ function init() {
     SectionManager.render();
 
     let currentTemplate = 'advanced';
+    let aiMarkdownOutput = '';   // stores last AI-generated markdown
 
     /* ── 2. CORE PIPELINE ──────────────────────────────────────── */
     function rebuildReadme() {
@@ -31,7 +32,7 @@ function init() {
         templateSelect.addEventListener('change', function () {
             currentTemplate = this.value;
             rebuildReadme();
-            ExportManager.showToast('Template switched to "' + this.options[this.selectedIndex].text + '"', 'success', 2000);
+            ExportManager.showToast('Template: ' + this.options[this.selectedIndex].text, 'success', 1800);
         });
     }
 
@@ -42,7 +43,7 @@ function init() {
         html.setAttribute('data-theme', isDark ? 'light' : 'dark');
         document.getElementById('icon-moon').style.display = isDark ? 'none' : '';
         document.getElementById('icon-sun').style.display = isDark ? '' : 'none';
-        ExportManager.showToast(isDark ? 'Light mode' : 'Dark mode', '', 1500);
+        ExportManager.showToast(isDark ? '☀️ Light mode' : '🌙 Dark mode', '', 1500);
     };
 
     /* ── 5. EXPORT BUTTONS ─────────────────────────────────────── */
@@ -52,10 +53,25 @@ function init() {
     document.getElementById('btn-download').onclick = function () {
         ExportManager.downloadReadme(PreviewRenderer.getLastMarkdown());
     };
+    // Apply raw edits back to preview
+    var btnApplyRaw = document.getElementById('btn-apply-raw');
+    if (btnApplyRaw) {
+        btnApplyRaw.onclick = function () {
+            var rawCode = document.getElementById('raw-code');
+            if (!rawCode) return;
+            var edited = rawCode.value;
+            PreviewRenderer.render(edited);
+            ptabPreview.click();
+            ExportManager.showToast('✅ Markdown applied to preview!', 'success', 1800);
+        };
+    }
+    // Copy raw reads from editable textarea
     var btnCopyRaw = document.getElementById('btn-copy-raw');
     if (btnCopyRaw) {
         btnCopyRaw.onclick = function () {
-            ExportManager.copyToClipboard(PreviewRenderer.getLastMarkdown());
+            var rawCode = document.getElementById('raw-code');
+            var md = rawCode ? rawCode.value : PreviewRenderer.getLastMarkdown();
+            ExportManager.copyToClipboard(md);
         };
     }
 
@@ -64,11 +80,15 @@ function init() {
         if (!confirm('Reset all fields? This cannot be undone.')) return;
         document.querySelectorAll('input[type="text"], input[type="email"], input[type="url"], textarea').forEach(function (el) { el.value = ''; });
         document.querySelectorAll('input[type="checkbox"]').forEach(function (el) {
-            var defaults = ['f-show-stats', 'f-show-streak', 'f-show-langs', 'f-wave', 'f-typing', 'f-banner'];
+            var defaults = ['f-show-stats', 'f-show-streak', 'f-show-langs', 'f-wave', 'f-typing', 'f-banner', 'f-yaml-about', 'f-skill-icons'];
             el.checked = defaults.indexOf(el.id) !== -1;
         });
+        // Hide AI output section on reset
+        var aiSection = document.getElementById('ai-output-section');
+        if (aiSection) aiSection.style.display = 'none';
+        aiMarkdownOutput = '';
         PreviewRenderer.renderNow('');
-        ExportManager.showToast('Form reset', '', 1800);
+        ExportManager.showToast('Form reset ✓', '', 1800);
     };
 
     /* ── 7. FORM TABS ──────────────────────────────────────────── */
@@ -106,7 +126,7 @@ function init() {
         rawBody.classList.remove('hidden');
         previewBody.classList.add('hidden');
         var rawCode = document.getElementById('raw-code');
-        if (rawCode) rawCode.textContent = PreviewRenderer.getLastMarkdown();
+        if (rawCode) rawCode.value = PreviewRenderer.getLastMarkdown();
     };
 
     /* ── 9. BADGE BUILDER ──────────────────────────────────────── */
@@ -156,16 +176,105 @@ function init() {
             });
             BadgeBuilder.renderBadgeList();
             rebuildReadme();
-            ExportManager.showToast('Badge added!', 'success', 1800);
+            ExportManager.showToast('Badge added! 🏷', 'success', 1800);
         };
     }
 
     updateBadgePreview();
 
-    /* ── 10. SEED DEMO DATA (first visit) ─────────────────────── */
+    /* ── 10. AI TAB LOGIC ──────────────────────────────────────── */
+    var btnAiGenerate = document.getElementById('btn-ai-generate');
+    var aiOutputSection = document.getElementById('ai-output-section');
+    var aiOutputBox = document.getElementById('ai-output-box');
+    var btnCopyAi = document.getElementById('btn-copy-ai');
+    var btnApplyAi = document.getElementById('btn-apply-ai');
+
+    // README type card active state toggle
+    var rtypeCards = document.querySelectorAll('.readme-type-card');
+    rtypeCards.forEach(function (card) {
+        var radio = card.querySelector('input[type="radio"]');
+        if (radio) {
+            radio.addEventListener('change', function () {
+                rtypeCards.forEach(function (c) { c.classList.remove('active'); });
+                if (radio.checked) card.classList.add('active');
+            });
+            card.addEventListener('click', function () {
+                rtypeCards.forEach(function (c) { c.classList.remove('active'); });
+                card.classList.add('active');
+            });
+        }
+    });
+
+    if (btnAiGenerate) {
+        btnAiGenerate.onclick = async function () {
+            var state = FormManager.getState();
+            var extraText = (document.getElementById('f-ai-extra') || {}).value || '';
+            var readmeType = 'full';
+            var checked = document.querySelector('input[name="readme-type"]:checked');
+            if (checked) readmeType = checked.value;
+
+            // Validate: need at least a username
+            if (!state.username && !state.name) {
+                ExportManager.showToast('Please fill in your Name or GitHub Username first!', 'error');
+                return;
+            }
+
+            // Loading state
+            btnAiGenerate.disabled = true;
+            btnAiGenerate.innerHTML = '<span class="ai-loading-spinner"><span class="spinner-ring"></span> Generating...</span>';
+
+            if (aiOutputSection) aiOutputSection.style.display = 'flex';
+            if (aiOutputBox) {
+                aiOutputBox.className = 'ai-output-box loading';
+                aiOutputBox.innerHTML = '<span class="ai-loading-spinner"><span class="spinner-ring"></span>&nbsp;AI is crafting your README...</span>';
+            }
+
+            try {
+                var generated = await AIManager.generateReadme(state, readmeType, extraText);
+                aiMarkdownOutput = generated;
+
+                if (aiOutputBox) {
+                    aiOutputBox.className = 'ai-output-box';
+                    aiOutputBox.textContent = generated;
+                }
+                ExportManager.showToast('✨ AI README generated!', 'success', 2500);
+            } catch (err) {
+                console.error('AI generation error:', err);
+                if (aiOutputBox) {
+                    aiOutputBox.className = 'ai-output-box';
+                    aiOutputBox.textContent = '❌ Generation failed: ' + (err.message || 'Network error. Please check your connection and try again.');
+                }
+                ExportManager.showToast('AI generation failed. Try again!', 'error');
+            } finally {
+                btnAiGenerate.disabled = false;
+                btnAiGenerate.innerHTML =
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="pointer-events:none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>' +
+                    ' Generate with AI';
+            }
+        };
+    }
+
+    if (btnCopyAi) {
+        btnCopyAi.onclick = function () {
+            if (!aiMarkdownOutput) { ExportManager.showToast('Nothing to copy yet!', 'error'); return; }
+            ExportManager.copyToClipboard(aiMarkdownOutput);
+        };
+    }
+
+    if (btnApplyAi) {
+        btnApplyAi.onclick = function () {
+            if (!aiMarkdownOutput) { ExportManager.showToast('Generate a README first!', 'error'); return; }
+            PreviewRenderer.render(aiMarkdownOutput);
+            ExportManager.showToast('✅ AI README applied to preview!', 'success', 2000);
+            // Switch to preview tab
+            ptabPreview.click();
+        };
+    }
+
+    /* ── 11. SEED DEMO DATA (first visit) ─────────────────────── */
     function seedDemoData() {
-        if (localStorage.getItem('readme-forge-v2-visited')) return;
-        localStorage.setItem('readme-forge-v2-visited', '1');
+        if (localStorage.getItem('readme-forge-v3-visited')) return;
+        localStorage.setItem('readme-forge-v3-visited', '1');
 
         function setVal(id, val) { var el = document.getElementById(id); if (el) el.value = val; }
         function setChk(id, val) { var el = document.getElementById(id); if (el) el.checked = val; }
@@ -185,26 +294,34 @@ function init() {
         setVal('f-typing-lines', 'Turning Data Into Insights;Building Local AI Agents;Crafting Beautiful Web Experiences;Privacy-First AI | RAG | OCR');
         setVal('f-banner-text', 'VICKY RAJ');
         setVal('f-banner-desc', 'Data Analyst | ML Learner | Web Dev | AI Builder');
+
         setChk('f-banner', true);
         setChk('f-show-stats', true);
         setChk('f-show-streak', true);
         setChk('f-show-langs', true);
         setChk('f-typing', true);
+        setChk('f-yaml-about', true);
+        setChk('f-skill-icons', true);
+        setChk('f-wave', true);
+
         setVal('s-linkedin', 'vicky-raj-090760282');
         setVal('s-instagram', 'vr_razzz');
         setVal('s-github', 'vicky-tec');
 
-        ['HTML5', 'CSS3', 'JavaScript', 'Python', 'MySQL', 'Git', 'GitHub', 'Figma', 'Django', 'Power BI'].forEach(function (s) { FormManager.addSkill(s); });
+        // Add default skills (clear first to avoid duplicates on re-init)
+        ['HTML5', 'CSS3', 'JavaScript', 'Python', 'MySQL', 'Git', 'GitHub', 'Figma', 'Django', 'Power BI'].forEach(function (s) {
+            FormManager.addSkill(s);
+        });
 
         rebuildReadme();
     }
 
     seedDemoData();
-    if (localStorage.getItem('readme-forge-v2-visited')) {
+    if (localStorage.getItem('readme-forge-v3-visited')) {
         setTimeout(rebuildReadme, 80);
     }
 
-    /* ── 11. KEYBOARD SHORTCUTS ─────────────────────────────────── */
+    /* ── 12. KEYBOARD SHORTCUTS ─────────────────────────────────── */
     document.addEventListener('keydown', function (e) {
         if (e.ctrlKey && e.shiftKey && e.key === 'D') { e.preventDefault(); ExportManager.downloadReadme(PreviewRenderer.getLastMarkdown()); }
         if (e.ctrlKey && e.shiftKey && e.key === 'C') { e.preventDefault(); ExportManager.copyToClipboard(PreviewRenderer.getLastMarkdown()); }

@@ -183,7 +183,9 @@ const TemplateEngine = (() => {
         }
 
         if (tmpl !== 'minimal') {
-            lines.push('<br clear="right"/>', '');
+            var clearTag = '<br clear="right"/>';
+            // avoid duplicate clear tags
+            if (lines[lines.length - 1] !== clearTag) lines.push(clearTag, '');
         }
         return lines.join('\n');
     }
@@ -294,7 +296,7 @@ const TemplateEngine = (() => {
                 if (state.showStats) lines.push('![' + u + ' Stats](' + statsUrl(u, state.statsTheme, 'stats') + bgParam + ')', '');
                 if (state.showStreak) lines.push('![' + u + ' Streak](' + statsUrl(u, state.statsTheme, 'streak') + bgParam + ')', '');
             } else {
-                lines.push('<table><tr>');
+                lines.push('<table border="0" cellspacing="0" cellpadding="6"><tr>');
                 if (state.showStats) lines.push('<td><img src="' + statsUrl(u, state.statsTheme, 'stats') + '" alt="GitHub Stats" height="180"/></td>');
                 if (state.showStreak) lines.push('<td><img src="' + statsUrl(u, state.statsTheme, 'streak') + '" alt="GitHub Streak" height="180"/></td>');
                 lines.push('</tr></table>', '');

@@ -4,14 +4,34 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>README Forge — GitHub README Generator</title>
-    <meta name="description"
-        content="Generate beautiful, professional GitHub profile README files instantly with live preview, templates, badges, and GitHub stats." />
 
+    <!-- Primary SEO -->
+    <title>README Forge — Free GitHub Profile README Generator with AI</title>
+    <meta name="description"
+        content="Generate stunning, professional GitHub profile README files instantly. Use AI to create Full Info, Short, or Creative Interactive READMEs with live preview, badges, GitHub stats, and one-click download. 100% free, no signup required." />
+    <meta name="keywords"
+        content="github readme generator, github profile readme, readme maker, readme creator, github stats, readme badge generator, ai readme generator, github markdown generator, profile readme template, github readme builder" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="README Forge" />
+    <link rel="canonical" href="https://vicky-tec.github.io/ReadmeGenerator/" />
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="README Forge — Free AI GitHub README Generator" />
+    <meta property="og:description"
+        content="Build beautiful GitHub profile READMEs in seconds. AI-powered, live preview, custom badges, GitHub stats — completely free." />
+    <meta property="og:url" content="https://vicky-tec.github.io/ReadmeGenerator/" />
+    <meta property="og:site_name" content="README Forge" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="README Forge — Free AI GitHub README Generator" />
+    <meta name="twitter:description"
+        content="Build beautiful GitHub profile READMEs in seconds. AI-powered, live preview, custom badges." />
+
+    <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
-        rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -27,14 +47,31 @@
 
 <body>
 
+    <!-- Visually hidden H1 for SEO -->
+    <h1 class="sr-only">README Forge — Free GitHub Profile README Generator with AI</h1>
+
+    <!-- Animated Background Orbs -->
+    <div class="bg-orbs" aria-hidden="true">
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+    </div>
+
     <!-- ══════ HEADER ══════ -->
     <header class="site-header" role="banner">
         <div class="header-inner">
             <div class="brand">
                 <svg class="brand-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L2 7l10 5 10-5-10-5z" fill="var(--accent-primary)" />
-                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="var(--accent-primary)" stroke-width="2" fill="none"
+                    <path d="M12 2L2 7l10 5 10-5-10-5z" fill="url(#brandGrad)" />
+                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="url(#brandGrad)" stroke-width="2" fill="none"
                         stroke-linecap="round" />
+                    <defs>
+                        <linearGradient id="brandGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#6a0dad" />
+                            <stop offset="50%" stop-color="#9b30ff" />
+                            <stop offset="100%" stop-color="#00d4ff" />
+                        </linearGradient>
+                    </defs>
                 </svg>
                 <span class="brand-name">README <span class="brand-accent">Forge</span></span>
             </div>
@@ -42,7 +79,7 @@
             <nav class="header-actions" aria-label="Primary actions">
                 <label class="sr-only" for="template-select">Template</label>
                 <div class="select-wrapper">
-                    <select id="template-select" aria-label="Select template">
+                    <select id="template-select" aria-label="Select README template">
                         <option value="advanced">🚀 Advanced</option>
                         <option value="developer">🧑‍💻 Developer</option>
                         <option value="minimal">✨ Minimal</option>
@@ -50,7 +87,7 @@
                     </select>
                 </div>
 
-                <button id="theme-toggle" class="btn btn-icon" aria-label="Toggle theme" title="Toggle theme"
+                <button id="theme-toggle" class="btn btn-icon" aria-label="Toggle light/dark theme" title="Toggle theme"
                     type="button">
                     <svg id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         style="pointer-events:none">
@@ -70,7 +107,7 @@
                     </svg>
                 </button>
 
-                <button id="btn-copy" class="btn btn-secondary" aria-label="Copy markdown" type="button">
+                <button id="btn-copy" class="btn btn-secondary" aria-label="Copy markdown to clipboard" type="button">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         style="pointer-events:none">
                         <rect x="9" y="9" width="13" height="13" rx="2" />
@@ -79,7 +116,7 @@
                     Copy MD
                 </button>
 
-                <button id="btn-download" class="btn btn-primary" aria-label="Download README.md" type="button">
+                <button id="btn-download" class="btn btn-primary" aria-label="Download README.md file" type="button">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         style="pointer-events:none">
                         <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
@@ -96,11 +133,12 @@
     <main class="workspace" role="main">
 
         <!-- LEFT PANEL: Form -->
-        <aside class="panel panel-form" id="panel-form" aria-label="README configuration">
+        <aside class="panel panel-form" id="panel-form" aria-label="README configuration panel">
 
-            <nav class="tab-bar" role="tablist" aria-label="Form sections">
+            <nav class="tab-bar" role="tablist" aria-label="README configuration sections">
                 <button class="tab active" role="tab" aria-selected="true" data-tab="profile"
                     type="button">Profile</button>
+                <button class="tab" role="tab" aria-selected="false" data-tab="ai" type="button">✨ AI</button>
                 <button class="tab" role="tab" aria-selected="false" data-tab="advanced" type="button">Advanced</button>
                 <button class="tab" role="tab" aria-selected="false" data-tab="skills" type="button">Skills</button>
                 <button class="tab" role="tab" aria-selected="false" data-tab="projects" type="button">Projects</button>
@@ -110,7 +148,7 @@
             </nav>
 
             <!-- ── TAB: Profile ── -->
-            <section class="tab-panel active" id="tab-profile" aria-label="Profile settings">
+            <section class="tab-panel active" id="tab-profile" aria-labelledby="tab-profile-label">
                 <div class="form-group">
                     <label for="f-name">Display Name</label>
                     <input type="text" id="f-name" placeholder="e.g. Vicky Raj" autocomplete="name" />
@@ -119,7 +157,7 @@
                     <label for="f-username">GitHub Username</label>
                     <div class="input-prefix">
                         <span class="prefix">github.com/</span>
-                        <input type="text" id="f-username" placeholder="your-username" />
+                        <input type="text" id="f-username" placeholder="your-username" autocomplete="username" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -127,8 +165,7 @@
                     <input type="text" id="f-tagline" placeholder="e.g. Data Analyst | ML Learner | Web Dev" />
                 </div>
                 <div class="form-group">
-                    <label for="f-bio">About Project <span class="hint-inline">(bullet points or short
-                            paragraph)</span></label>
+                    <label for="f-bio">About Me <span class="hint-inline">(bullet points or paragraph)</span></label>
                     <textarea id="f-bio" rows="3" placeholder="🔍 I turn raw data into decisions..."></textarea>
                 </div>
                 <div class="form-group">
@@ -137,7 +174,7 @@
                 </div>
                 <div class="form-group">
                     <label for="f-email">Contact Email</label>
-                    <input type="email" id="f-email" placeholder="you@example.com" />
+                    <input type="email" id="f-email" placeholder="you@example.com" autocomplete="email" />
                 </div>
                 <div class="form-group">
                     <label for="f-website">Portfolio / Website</label>
@@ -153,7 +190,7 @@
                 </div>
                 <div class="form-group">
                     <label for="f-status">Status</label>
-                    <input type="text" id="f-status" placeholder="Open to Collaborations & Internships" />
+                    <input type="text" id="f-status" placeholder="Open to Collaborations &amp; Internships" />
                 </div>
                 <div class="form-group">
                     <label for="f-focus">Focus Areas</label>
@@ -164,8 +201,7 @@
                     <input type="text" id="f-team" placeholder="e.g. Cosmic Shakti ✨" />
                 </div>
 
-                <!-- GitHub Stats -->
-                <!-- ── GitHub Stats Options ── -->
+                <!-- GitHub Stats Options -->
                 <div class="card-section options-section">
                     <div class="options-section-header">
                         <span class="options-section-icon">📊</span>
@@ -203,7 +239,7 @@
                         <label class="slide-toggle" for="f-show-trophies">
                             <div class="slide-toggle-info">
                                 <span class="slide-toggle-icon">🏆</span>
-                                <span class="slide-toggle-label">GitHub Trophies</span>
+                                <span class="slide-toggle-label">Trophies</span>
                             </div>
                             <input type="checkbox" id="f-show-trophies" />
                             <span class="slide-switch"></span>
@@ -219,10 +255,8 @@
                         </label>
                     </div>
 
-                    <div class="form-group" style="margin-top:16px;margin-bottom:0">
-                        <label for="f-stats-theme" style="display:flex;align-items:center;gap:6px">
-                            <span>🎨</span> Stats Theme
-                        </label>
+                    <div class="form-group" style="margin:16px 16px 16px">
+                        <label for="f-stats-theme">🎨 Stats Theme</label>
                         <select id="f-stats-theme">
                             <option value="tokyonight">🌃 Tokyo Night</option>
                             <option value="radical">🌈 Radical</option>
@@ -236,7 +270,7 @@
                     </div>
                 </div>
 
-                <!-- ── Profile Options ── -->
+                <!-- Profile Options -->
                 <div class="card-section options-section">
                     <div class="options-section-header">
                         <span class="options-section-icon">⚙️</span>
@@ -247,7 +281,7 @@
                         <label class="slide-toggle" for="f-typing">
                             <div class="slide-toggle-info">
                                 <span class="slide-toggle-icon">⌨️</span>
-                                <span class="slide-toggle-label">Typing Animation</span>
+                                <span class="slide-toggle-label">Typing Anim.</span>
                             </div>
                             <input type="checkbox" id="f-typing" checked />
                             <span class="slide-switch"></span>
@@ -256,7 +290,7 @@
                         <label class="slide-toggle" for="f-yaml-about">
                             <div class="slide-toggle-info">
                                 <span class="slide-toggle-icon">📋</span>
-                                <span class="slide-toggle-label">YAML About Card</span>
+                                <span class="slide-toggle-label">YAML About</span>
                             </div>
                             <input type="checkbox" id="f-yaml-about" checked />
                             <span class="slide-switch"></span>
@@ -283,7 +317,7 @@
                         <label class="slide-toggle" for="f-banner">
                             <div class="slide-toggle-info">
                                 <span class="slide-toggle-icon">🎆</span>
-                                <span class="slide-toggle-label">Animated Banner</span>
+                                <span class="slide-toggle-label">Anim. Banner</span>
                             </div>
                             <input type="checkbox" id="f-banner" checked />
                             <span class="slide-switch"></span>
@@ -301,9 +335,93 @@
                 </div>
             </section>
 
+            <!-- ── TAB: AI Generation ── -->
+            <section class="tab-panel" id="tab-ai" aria-label="AI README Generation">
+                <div class="ai-panel-intro">
+                    <span class="ai-panel-intro-icon">🤖</span>
+                    <div class="ai-panel-intro-text">
+                        <h4>AI-Powered README Generator</h4>
+                        <p>Fill your Profile tab first, then let AI craft an amazing README. Add extra info below to
+                            make it truly personal!</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="f-ai-extra">Your Info / Project Idea <span class="hint-inline">(used in all
+                            modes)</span></label>
+                    <textarea id="f-ai-extra" rows="4"
+                        placeholder="e.g. I love anime, my biggest project is an AI chatbot. OR: Describe your project — 'A CLI tool that converts any website into a Markdown file using Python and BeautifulSoup'"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>README Style</label>
+                    <div class="readme-type-selector" id="readme-type-selector">
+                        <label class="readme-type-card active" id="rtype-full-label">
+                            <input type="radio" name="readme-type" id="rtype-full" value="full" checked />
+                            <span class="readme-type-icon">📄</span>
+                            <div class="readme-type-info">
+                                <div class="readme-type-title">Full Info README</div>
+                                <div class="readme-type-desc">All sections — banner, stats, skills, projects, contact
+                                </div>
+                            </div>
+                        </label>
+                        <label class="readme-type-card" id="rtype-short-label">
+                            <input type="radio" name="readme-type" id="rtype-short" value="short" />
+                            <span class="readme-type-icon">⚡</span>
+                            <div class="readme-type-info">
+                                <div class="readme-type-title">Short &amp; Clean README</div>
+                                <div class="readme-type-desc">Minimal, impactful — 3 sections, great for repos</div>
+                            </div>
+                        </label>
+                        <label class="readme-type-card" id="rtype-creative-label">
+                            <input type="radio" name="readme-type" id="rtype-creative" value="creative" />
+                            <span class="readme-type-icon">🎨</span>
+                            <div class="readme-type-info">
+                                <div class="readme-type-title">Creative &amp; Interactive</div>
+                                <div class="readme-type-desc">Animations, ASCII art, emoji-rich, eye-catching</div>
+                            </div>
+                        </label>
+                        <label class="readme-type-card" id="rtype-idea-label">
+                            <input type="radio" name="readme-type" id="rtype-idea" value="idea" />
+                            <span class="readme-type-icon">💡</span>
+                            <div class="readme-type-info">
+                                <div class="readme-type-title">Describe Your Idea</div>
+                                <div class="readme-type-desc">Write your project idea — AI builds a full README from
+                                    scratch</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <button id="btn-ai-generate" class="btn btn-ai btn-full" type="button"
+                    aria-label="Generate README with AI">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="pointer-events:none">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    Generate with AI
+                </button>
+
+                <div class="ai-output-section" id="ai-output-section" style="display:none">
+                    <div class="ai-output-header">
+                        <span class="ai-output-label">✨ AI Generated README</span>
+                        <button id="btn-copy-ai" class="btn btn-ghost btn-sm" type="button"
+                            aria-label="Copy AI generated markdown">Copy</button>
+                    </div>
+                    <div class="ai-output-box" id="ai-output-box"></div>
+                    <div class="ai-apply-row">
+                        <button id="btn-apply-ai" class="btn btn-primary btn-full" type="button"
+                            aria-label="Apply AI output to preview">
+                            Apply to Preview
+                        </button>
+                    </div>
+                </div>
+            </section>
+
             <!-- ── TAB: Advanced ── -->
             <section class="tab-panel" id="tab-advanced" aria-label="Advanced settings">
-                <p class="hint">Configure animated banner, typing lines, and more for the Advanced template.</p>
+                <p class="hint">Configure animated banner, typing lines, and GIF for the Advanced template.</p>
 
                 <div class="card-section">
                     <h3 class="card-section-title">Animated Banner</h3>
@@ -316,8 +434,7 @@
                         <input type="text" id="f-banner-desc" placeholder="Data Analyst | ML Learner | Web Dev" />
                     </div>
                     <div class="form-group">
-                        <label for="f-banner-color">Banner Gradient <span class="hint-inline">CSS gradient
-                                stops</span></label>
+                        <label for="f-banner-color">Banner Gradient <span class="hint-inline">color stops</span></label>
                         <select id="f-banner-color">
                             <option value="0:6a0dad,50:9b30ff,100:00d4ff">Purple → Cyan</option>
                             <option value="0:0f0c29,50:302b63,100:24243e">Dark Purple</option>
@@ -331,9 +448,9 @@
 
                 <div class="card-section">
                     <h3 class="card-section-title">Typing Animation Lines</h3>
-                    <p class="hint">Semicolon-separated lines (e.g. <em>Turning Data Into Insights;Building AI
-                            Apps</em>)</p>
-                    <div class="form-group">
+                    <p class="hint">Semicolon-separated lines e.g. <em>Turning Data Into Insights;Building AI Apps</em>
+                    </p>
+                    <div class="form-group mt-8">
                         <label for="f-typing-lines">Lines</label>
                         <textarea id="f-typing-lines" rows="4"
                             placeholder="Turning Data Into Insights;Building AI Apps;Open Source Contributor"></textarea>
@@ -342,38 +459,46 @@
 
                 <div class="card-section">
                     <h3 class="card-section-title">About Me — Coding GIF</h3>
-                    <p class="hint">Pick the GIF shown beside your about section. Click one to select.</p>
+                    <p class="hint">Click a GIF to select it for your about section.</p>
                     <div class="gif-picker" id="gif-picker">
-                        <button type="button" class="gif-option active" data-gif-idx="0" title="Typing at desk">
-                            <img src="https://media.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif" alt="GIF 1"
+                        <button type="button" class="gif-option active" data-gif-idx="0" title="Typing at desk"
+                            aria-label="Select typing GIF">
+                            <img src="https://media.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif" alt="Typing at desk"
                                 loading="lazy" />
                         </button>
-                        <button type="button" class="gif-option" data-gif-idx="1" title="Neon coder">
-                            <img src="https://media.giphy.com/media/L1R1tvI9svkIWwpVYr/giphy.gif" alt="GIF 2"
+                        <button type="button" class="gif-option" data-gif-idx="1" title="Neon coder"
+                            aria-label="Select neon coder GIF">
+                            <img src="https://media.giphy.com/media/L1R1tvI9svkIWwpVYr/giphy.gif" alt="Neon coder"
                                 loading="lazy" />
                         </button>
-                        <button type="button" class="gif-option" data-gif-idx="2" title="Pacman">
-                            <img src="https://media.giphy.com/media/ZVik7pBtu9dNS/giphy.gif" alt="GIF 3"
+                        <button type="button" class="gif-option" data-gif-idx="2" title="Pacman"
+                            aria-label="Select Pacman GIF">
+                            <img src="https://media.giphy.com/media/ZVik7pBtu9dNS/giphy.gif" alt="Pacman"
                                 loading="lazy" />
                         </button>
-                        <button type="button" class="gif-option" data-gif-idx="3" title="Coding cat">
-                            <img src="https://media.giphy.com/media/13HgwGsXF0aiGY/giphy.gif" alt="GIF 4"
+                        <button type="button" class="gif-option" data-gif-idx="3" title="Coding cat"
+                            aria-label="Select coding cat GIF">
+                            <img src="https://media.giphy.com/media/13HgwGsXF0aiGY/giphy.gif" alt="Coding cat"
                                 loading="lazy" />
                         </button>
-                        <button type="button" class="gif-option" data-gif-idx="4" title="Robot coding">
-                            <img src="https://media.giphy.com/media/RbDKaczqWovIugyJmW/giphy.gif" alt="GIF 5"
+                        <button type="button" class="gif-option" data-gif-idx="4" title="Robot coding"
+                            aria-label="Select robot GIF">
+                            <img src="https://media.giphy.com/media/RbDKaczqWovIugyJmW/giphy.gif" alt="Robot coding"
                                 loading="lazy" />
                         </button>
-                        <button type="button" class="gif-option" data-gif-idx="5" title="Code falling">
-                            <img src="https://media.giphy.com/media/M9gbBd9nbDrOTu1Mqx/giphy.gif" alt="GIF 6"
+                        <button type="button" class="gif-option" data-gif-idx="5" title="Code falling"
+                            aria-label="Select code rain GIF">
+                            <img src="https://media.giphy.com/media/M9gbBd9nbDrOTu1Mqx/giphy.gif" alt="Code falling"
                                 loading="lazy" />
                         </button>
-                        <button type="button" class="gif-option" data-gif-idx="6" title="Space coder">
-                            <img src="https://media.giphy.com/media/coxQHKASG60HrHtvkt/giphy.gif" alt="GIF 7"
+                        <button type="button" class="gif-option" data-gif-idx="6" title="Space coder"
+                            aria-label="Select space coder GIF">
+                            <img src="https://media.giphy.com/media/coxQHKASG60HrHtvkt/giphy.gif" alt="Space coder"
                                 loading="lazy" />
                         </button>
-                        <button type="button" class="gif-option" data-gif-idx="7" title="Matrix wave">
-                            <img src="https://media.giphy.com/media/KAq5w47R9rmTuxXUOs/giphy.gif" alt="GIF 8"
+                        <button type="button" class="gif-option" data-gif-idx="7" title="Matrix wave"
+                            aria-label="Select matrix GIF">
+                            <img src="https://media.giphy.com/media/KAq5w47R9rmTuxXUOs/giphy.gif" alt="Matrix wave"
                                 loading="lazy" />
                         </button>
                     </div>
@@ -382,7 +507,7 @@
             </section>
 
             <!-- ── TAB: Skills ── -->
-            <section class="tab-panel" id="tab-skills" aria-label="Skills settings">
+            <section class="tab-panel" id="tab-skills" aria-label="Skills configuration">
                 <p class="hint">Each skill auto-generates a badge. Toggle "Skill Icons" in Profile to use skillicons.dev
                     icons.</p>
 
@@ -403,15 +528,15 @@
             </section>
 
             <!-- ── TAB: Projects ── -->
-            <section class="tab-panel" id="tab-projects" aria-label="Projects settings">
-                <p class="hint">Add up to 3 projects for a table layout (Advanced template) or card layout (other
-                    templates).</p>
+            <section class="tab-panel" id="tab-projects" aria-label="Projects configuration">
+                <p class="hint">Add up to 3 pinned projects. They appear as a fancy HTML table in the Advanced template.
+                </p>
                 <div id="projects-list"></div>
                 <button id="btn-add-project" class="btn btn-outline btn-full" type="button">+ Add Project</button>
             </section>
 
             <!-- ── TAB: Badges ── -->
-            <section class="tab-panel" id="tab-badges" aria-label="Badge builder">
+            <section class="tab-panel" id="tab-badges" aria-label="Custom badge builder">
                 <p class="hint">Build custom shields.io badges and add them to your README.</p>
 
                 <div class="form-group">
@@ -425,7 +550,7 @@
                 <div class="form-group">
                     <label for="badge-color">Color</label>
                     <div class="badge-color-row">
-                        <input type="color" id="badge-color-picker" value="#6e40c9" />
+                        <input type="color" id="badge-color-picker" value="#6e40c9" aria-label="Pick badge color" />
                         <input type="text" id="badge-color" placeholder="blueviolet or #6e40c9" value="blueviolet" />
                     </div>
                 </div>
@@ -453,7 +578,7 @@
             </section>
 
             <!-- ── TAB: Social ── -->
-            <section class="tab-panel" id="tab-social" aria-label="Social links">
+            <section class="tab-panel" id="tab-social" aria-label="Social media links">
                 <p class="hint">Social links displayed as clickable badges in your README.</p>
 
                 <div class="form-group">
@@ -503,15 +628,15 @@
             </section>
 
             <!-- ── TAB: Sections ── -->
-            <section class="tab-panel" id="tab-sections" aria-label="Section order">
-                <p class="hint">Drag to reorder sections. Toggle to show/hide.</p>
-                <ul id="sections-sortable" class="sections-list" aria-label="README sections"></ul>
+            <section class="tab-panel" id="tab-sections" aria-label="README section order">
+                <p class="hint">Drag to reorder README sections. Toggle to show/hide each one.</p>
+                <ul id="sections-sortable" class="sections-list" aria-label="Draggable README sections"></ul>
             </section>
 
         </aside>
 
         <!-- RIGHT PANEL: Preview -->
-        <section class="panel panel-preview" aria-label="Live README preview">
+        <section class="panel panel-preview" aria-label="Live README preview panel">
             <header class="preview-header">
                 <div class="preview-tabs">
                     <button class="preview-tab active" id="ptab-preview" aria-selected="true"
@@ -519,25 +644,33 @@
                     <button class="preview-tab" id="ptab-raw" aria-selected="false" type="button">Raw Markdown</button>
                 </div>
                 <div class="preview-actions">
-                    <button id="btn-reset" class="btn btn-ghost btn-sm" aria-label="Reset form"
+                    <button id="btn-reset" class="btn btn-ghost btn-sm" aria-label="Reset all form fields"
                         type="button">Reset</button>
                 </div>
             </header>
 
             <div class="preview-body" id="preview-body">
-                <article id="preview-render" class="markdown-body" aria-live="polite" aria-label="README preview">
+                <article id="preview-render" class="markdown-body" aria-live="polite" aria-label="Live README preview">
                 </article>
             </div>
 
             <div class="preview-body hidden" id="raw-body">
-                <pre><code id="raw-code" class="language-markdown"></code></pre>
-                <button id="btn-copy-raw" class="btn btn-ghost btn-sm copy-raw-btn" type="button">Copy Raw</button>
+                <div class="raw-toolbar">
+                    <span class="raw-toolbar-label">✏️ Edit Markdown directly — changes apply to Preview</span>
+                    <div class="raw-toolbar-actions">
+                        <button id="btn-apply-raw" class="btn btn-primary btn-sm" type="button"
+                            aria-label="Apply raw markdown to preview">Apply Changes</button>
+                        <button id="btn-copy-raw" class="btn btn-ghost btn-sm" type="button"
+                            aria-label="Copy raw markdown">Copy Raw</button>
+                    </div>
+                </div>
+                <textarea id="raw-code" class="raw-editor" aria-label="Edit raw markdown" spellcheck="false"></textarea>
             </div>
         </section>
 
     </main>
 
-    <!-- TOAST -->
+    <!-- TOAST notification -->
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
     <!-- JS MODULES -->
@@ -546,6 +679,7 @@
     <script src="js/TemplateEngine.js"></script>
     <script src="js/PreviewRenderer.js"></script>
     <script src="js/ExportManager.js"></script>
+    <script src="js/AIManager.js"></script>
     <script src="js/FormManager.js"></script>
     <script src="js/app.js"></script>
 </body>

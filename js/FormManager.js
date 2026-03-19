@@ -95,15 +95,16 @@ const FormManager = (() => {
         grid.innerHTML = '';
         skills.forEach(function (skill) {
             var chip = document.createElement('span');
-            chip.className = 'skill-chip';
-            chip.innerHTML = skill + '<button type="button" class="skill-chip-remove" aria-label="Remove ' + skill + '">&times;</button>';
-            chip.querySelector('.skill-chip-remove').onclick = function () { removeSkill(skill); };
+            chip.className = 'skill-tag';
+            chip.innerHTML = skill + '<button type="button" aria-label="Remove ' + skill + '">&times;</button>';
+            chip.querySelector('button').onclick = function () { removeSkill(skill); };
             grid.appendChild(chip);
         });
-        document.querySelectorAll('.quick-skill-btn').forEach(function (btn) {
+        document.querySelectorAll('.quick-skill-chip').forEach(function (btn) {
             var s = btn.getAttribute('data-skill');
             var added = skills.some(function (x) { return x.toLowerCase() === s.toLowerCase(); });
-            btn.classList.toggle('added', added);
+            btn.style.borderColor = added ? 'var(--accent-primary)' : '';
+            btn.style.color = added ? 'var(--accent-primary)' : '';
         });
     }
 
@@ -111,12 +112,10 @@ const FormManager = (() => {
         var container = document.getElementById('quick-skills');
         if (!container) return;
         container.innerHTML = QUICK_SKILLS.map(function (s) {
-            return '<button type="button" class="quick-skill-btn" data-skill="' + s + '">' + s + '</button>';
+            return '<button type="button" class="quick-skill-chip" data-skill="' + s + '">' + s + '</button>';
         }).join('');
-        container.querySelectorAll('.quick-skill-btn').forEach(function (btn) {
-            btn.onclick = function () {
-                if (!btn.classList.contains('added')) addSkill(btn.getAttribute('data-skill'));
-            };
+        container.querySelectorAll('.quick-skill-chip').forEach(function (btn) {
+            btn.onclick = function () { addSkill(btn.getAttribute('data-skill')); };
         });
     }
 
@@ -147,8 +146,8 @@ const FormManager = (() => {
             card.className = 'project-card';
             card.innerHTML =
                 '<div class="project-card-header">' +
-                '<span class="project-card-title">Project ' + (idx + 1) + '</span>' +
-                '<button type="button" class="project-remove" aria-label="Remove project">&#128465;</button>' +
+                '<span class="project-label">Project ' + (idx + 1) + '</span>' +
+                '<button type="button" class="btn btn-ghost btn-sm" style="padding:4px 8px;font-size:16px" aria-label="Remove project">🗑</button>' +
                 '</div>' +
                 '<div class="form-group"><label>Project Name</label>' +
                 '<input type="text" class="pf-name" value="' + _esc(p.name) + '" placeholder="My Awesome Project"/></div>' +
